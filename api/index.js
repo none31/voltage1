@@ -1,4 +1,4 @@
-    var express = require('express');
+var express = require('express');
 var r = express.Router();
 
 // load pre-trained model
@@ -17,14 +17,15 @@ bot.onText(/\/start/, (msg) => {
         msg.chat.id,
         `hello ${msg.chat.first_name}, welcome...\n
         click /predict`
-    );   
+    );
+    state=0
 });
 
 state=0
 bot.onText(/\/predict/, (msg) => { 
     bot.sendMessage(
         msg.chat.id,
-        `input the value i|v`
+        `input the value x,y,z`
     );   
     state=1;
 });
@@ -32,27 +33,35 @@ bot.onText(/\/predict/, (msg) => {
 bot.on('message', (msg) => {
     if(state==1){
         console.log(msg.text);
-        s=msg.text.split('|');
-        i=s[0]
-        v=s[1]
+        s=msg.text.split(',');
+        x1=s[0]
+        x2=s[1]
+        x3=s[2]
         model.predict(
-            [parseFloat(s[0]), parseFloat(s[1])]
+            [parseFloat(s[0]), parseFloat(s[1]), parseFloat(s[2])]
         ).then((jres)=>{
             bot.sendMessage(
                 msg.chat.id,
-                `predicted v is ${jres[0]} volt`
+                `predicted y1 is ${jres[0]}`
             );
             bot.sendMessage(
                 msg.chat.id,
-                `predicted p is ${jres[1]} watt`
+                `predicted y2 is ${jres[1]}`
+            );
+            bot.sendMessage(
+                msg.chat.id,
+                `predicted y3 is ${jres[2]}`
             );
             bot.sendMessage(
                 msg.chat.id,
                 `/predict again`
-        );   
+            );
+            bot.sendMessage(
+                msg.chat.id,
+                `Created by Effendi`
+            );
+            state=0
         })
-    }else{
-        state=0
     }
 })
 // routers
