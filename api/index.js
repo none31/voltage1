@@ -25,7 +25,7 @@ state=0
 bot.onText(/\/predict/, (msg) => { 
     bot.sendMessage(
         msg.chat.id,
-        `input the value x,y,z`
+        `input the value x1,x2,x3`
     );   
     state=1;
 });
@@ -65,11 +65,12 @@ bot.on('message', (msg) => {
     }
 })
 // routers
-r.get('/prediction/:i/:r', function(req, res, next) {    
+r.get('/prediction/:x1/:x2/:x3', function(req, res, next) {    
     model.predict(
         [
-            parseFloat(req.params.i), // string to float
-            parseFloat(req.params.r)
+            parseFloat(req.params.x1), // string to float
+            parseFloat(req.params.x2),
+            parseFloat(req.params.x3)
         ]
     ).then((jres)=>{
         res.json(jres);
